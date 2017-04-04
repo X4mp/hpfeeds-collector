@@ -62,7 +62,7 @@ def main():
         logger.warning("Warning: no config found, using default values for hpfeeds server")
     publisher  = hpfeeds_connect(cfg['host'], cfg['port'], cfg['id'], cfg['secret'])
 
-    tail = multitail2.MultiTail('/var/log/samba/audit.log') #cfg['tail_file'])
+    tail = multitail2.MultiTail(cfg['tail_file'])
     for filemeta, line in tail:
         record = parse(line)
         if record:
