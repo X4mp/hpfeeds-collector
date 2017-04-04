@@ -10,18 +10,18 @@ import hpfeeds
 import logging
 import re
 
-root = logging.getLogger()
-root.setLevel(logging.ERROR)
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.INFO)
+ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
-root.addHandler(ch)
-logger = logging.getLogger("hpfeeds-collector")
+logger.addHandler(ch)
 
 def parse(line):
-    regex = r''
+#Apr  3 15:44:14 DC1 smbd_audit: shareuser|192.168.56.22|fileshare|close|ok|ha.txt
+    regex = r'^(?P<timestamp>\S{3}\s+\d+\s+\d{2}:\d{2}:\d{2})\s+(?P<hostname>\S+)\s(?P<flag>\w+):\s+(?P<username>\w+|\d+)\|(?P<source_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\|(?P<fileshare_name>\w+|\d+)\|(?P<action>\w+)\|(?P<status>\w+)\|(?P<filename>\S*)'
     match = re.match(regex, line)
     if match:
         res = match.groupdict()
@@ -62,12 +62,12 @@ def main():
         logger.warning("Warning: no config found, using default values for hpfeeds server")
     publisher  = hpfeeds_connect(cfg['host'], cfg['port'], cfg['id'], cfg['secret'])
 
-    tail = multitail2.MultiTail(cfg['tail_file'])
+    tail = multitail2.MultiTail('/var/log/samba/audit.log') #cfg['tail_file'])
     for filemeta, line in tail:
-        logger.debug(filemeta, line)
         record = parse(line)
         if record:
             publisher.publish(cfg['channel'], json.dumps(record))
+            logger.debug(json.dumps(record))
     publisher.stop()
     return 0
 
