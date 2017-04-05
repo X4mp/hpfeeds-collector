@@ -46,7 +46,7 @@ def main():
         'host' : '',
         'port' : 10000,
         'channel' : '',
-        'id' : '',
+        'ident' : '',
         'secret' : '',
         'tail_file' : ''
     }
@@ -61,7 +61,7 @@ def main():
                 cfg[name] = value.encode("utf-8")
     else:
         logger.warning("Warning: no config found, using default values for hpfeeds server")
-    publisher  = hpfeeds_connect(cfg['host'], cfg['port'], cfg['id'], cfg['secret'])
+    publisher  = hpfeeds_connect(cfg['host'], cfg['port'], cfg['ident'], cfg['secret'])
 
     tail = multitail2.MultiTail(cfg['tail_file'])
     for filemeta, line in tail:
