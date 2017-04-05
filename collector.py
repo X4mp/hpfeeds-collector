@@ -42,12 +42,12 @@ def hpfeeds_connect(host, port, ident, secret):
 
 def main():
     cfg = {
-        'host' : '192.168.56.100',
+        'host' : '',
         'port' : 10000,
-        'channel' : 'samba',
-        'id' : 'captainhook',
-        'secret' : 'alibaba',
-        'tail_file' : '/var/log/samba/audit.log'
+        'channel' : '',
+        'id' : '',
+        'secret' : '',
+        'tail_file' : ''
     }
 
     if len(sys.argv) > 1:
