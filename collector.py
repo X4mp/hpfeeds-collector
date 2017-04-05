@@ -33,6 +33,7 @@ def parse(line):
 
 def hpfeeds_connect(host, port, ident, secret):
     try:
+	logger.info('{0}, {1}'.format(ident, secret))
         connection = hpfeeds.new(host, port, ident, secret)
     except hpfeeds.FeedException as e:
         logger.error('feed exception: %s'%e)
